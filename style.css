@@ -1,0 +1,15 @@
+*{
+    margin: 0;
+
+}
+
+.container{
+background-color: rgb(174, 223, 245);
+    margin: 30px;
+    padding-top: 4rem;
+}
+.head{
+background-color: rgb(115, 203, 247);
+    padding-left: 36%;
+    padding-top: 4rem;
+}
