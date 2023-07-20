@@ -16,6 +16,6 @@ background-color: rgb(115, 203, 247);
 
 @media(max-width:767px){
     .head{
-        padding-left:2rem;
+        padding-left:1rem;
     }
 }
