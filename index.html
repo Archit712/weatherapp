@@ -23,20 +23,18 @@
             <li class="nav-item">
               <a class="nav-link" href="#">About</a>
             </li>
-           
-             
           </ul>
           <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search"  id="city" placeholder="Search your city.." aria-label="Search">
-            <button class="btn btn-outline-success" type="submit" id="submit" >Search </button>
+            <input class="form-control me-2" type="search" id="city" placeholder="Search your city.." aria-label="Search">
+            <button class="btn btn-outline-success" type="submit" id="submit">Search</button>
           </form>
         </div>
       </div>
     </nav>
 
-  <div class="head">
-    <h1>The weather of: <span id="cityname"></span></h1>
-  </div>
+    <div class="head">
+      <h1>The weather of: <span id="cityname"></span></h1>
+    </div>
     <div class="container">
       <main>
         <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
@@ -46,14 +44,12 @@
                 <h4 class="my-0 fw-normal">Temperature</h4>
               </div>
               <div class="card-body">
-                <h1 class="card-title pricing-card-title"><span id="temp1"></span><small class="text-body-secondary fw-light">°C</small></h1>
+                <h1 class="card-title pricing-card-title"><span id="temp1"></span><small class="text-body-secondary fw-light">°F</small></h1>
                 <ul class="list-unstyled mt-3 mb-4">
-                  <li>Temperature is:  <span id="temp"></span></li>
+                  <li>Temperature is: <span id="temp"></span></li>
                   <li>min_temp: <span id="min_temp"></span></li>
                   <li>max_temp: <span id="max_temp"></span></li>
-                  
                 </ul>
-              
               </div>
             </div>
           </div>
@@ -65,39 +61,75 @@
               <div class="card-body">
                 <h1 class="card-title pricing-card-title"><span id="humidity1"></span><small class="text-body-secondary fw-light">%</small></h1>
                 <ul class="list-unstyled mt-3 mb-4">
-                  <li>cloud pct: <span id="cloud_pct"></span></li>
-                  <li>feels like: <span id="feels_like"></span></li>
-                  <li>humidity: <span id="humidity"></span>%</li>
-                  
+                  <li>Humidity: <span id="humidity"></span>%</li>
                 </ul>
-               
               </div>
             </div>
           </div>
           <div class="col">
-            <div class="card mb-4 rounded-3 shadow-sm ">
-              <div class="card-header py-3 ">
+            <div class="card mb-4 rounded-3 shadow-sm">
+              <div class="card-header py-3">
                 <h4 class="my-0 fw-normal">Wind</h4>
               </div>
               <div class="card-body">
-                <h1 class="card-title pricing-card-title"><span id="wind_speed1"></span><small class="text-body-secondary fw-light">Km/hr</small></h1>
+                <h1 class="card-title pricing-card-title"><span id="wind_speed1"></span><small class="text-body-secondary fw-light">mph</small></h1>
                 <ul class="list-unstyled mt-3 mb-4">
-                  <li>wind speed: <span id="wind_speed"></span></li>
-                  
-                  <li>sunset: <span id="sunset"></span></li>
-                  <li>sunrise: <span id="sunrise"></span></li>
+                  <li>Wind speed: <span id="wind_speed"></span></li>
+                  <li>Sunset: <span id="sunset"></span></li>
+                  <li>Sunrise: <span id="sunrise"></span></li>
                 </ul>
-                
               </div>
             </div>
           </div>
         </div>
-    
-       
-        
       </main>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-<script src="javascript.js"></script> 
-</body>
+    <script>
+      document.getElementById('submit').addEventListener('click', function(e) {
+        e.preventDefault();
+        const city = document.getElementById('city').value;
+        getWeather(city);
+      });
+
+      async function getWeather(city) {
+        const url = `https://yahoo-weather5.p.rapidapi.com/weather?location=${city}&format=json&u=f`;
+        const options = {
+          method: 'GET',
+          headers: {
+            'x-rapidapi-key': 'aec21468b6msh72abfae61e6910ep1ddbe5jsn5cf6a7094288',
+            'x-rapidapi-host': 'yahoo-weather5.p.rapidapi.com'
+          }
+        };
+
+        try {
+          const response = await fetch(url, options);
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const result = await response.json();
+          console.log(result);
+
+          // Update DOM elements with response data
+          document.getElementById('cityname').innerText = city;
+          document.getElementById('temp1').innerHTML = result.current_observation.condition.temperature;
+          document.getElementById('temp').innerHTML = result.current_observation.condition.temperature;
+          document.getElementById('min_temp').innerHTML = result.forecasts[0].low;
+          document.getElementById('max_temp').innerHTML = result.forecasts[0].high;
+          document.getElementById('humidity').innerHTML = result.current_observation.atmosphere.humidity;
+          document.getElementById('humidity1').innerHTML = result.current_observation.atmosphere.humidity;
+          document.getElementById('wind_speed').innerHTML = result.current_observation.wind.speed;
+          document.getElementById('wind_speed1').innerHTML = result.current_observation.wind.speed;
+          document.getElementById('sunrise').innerHTML = result.current_observation.astronomy.sunrise;
+          document.getElementById('sunset').innerHTML = result.current_observation.astronomy.sunset;
+        } catch (error) {
+          console.error('Error fetching weather data:', error);
+        }
+      }
+
+      // Get initial weather for a default city
+      getWeather('Delhi');
+    </script>
+  </body>
 </html>
